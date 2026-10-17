@@ -1,5 +1,5 @@
 ##
-# Auto Voice on MP3 sharing v1.9
+# Auto Voice on MP3 sharing v1.9.1
 #  by MC_8 - Carl M. Gregory <gregory@worldinter.net>
 #
 # If you have any questions/comments/suggestions/bug reports, please e`mail me.
@@ -16,6 +16,10 @@
 ##
 # History
 ##
+#  v1.9.1 (06.30.01)
+#   MC_8 - mp3autov(servexr) was expiring the server after that time of bening voiced
+#          rather than last known mp3 sharing activity, fixed.
+#
 #  v1.9 (03.11.01)
 #   MC_8 - Added SVS v1.2
 #   MC_8 - unk^ - Fixed:  The %servers replacment wasn't building a list of mp3 servers
@@ -28,7 +32,7 @@
 #  -Fixed, "msg already queued. skipping: PRIVMSG #channel :" anoyance.
 #  -Borg script just has to be different, *sigh*.  Made this script adapt (funny hu)
 #   to the borg script.
-#   This fixes: Tcl error [mc:mp3voice:pre]: syntax error in expression "0+408 (1,652.20 mb)"
+#   This fixes: Tcl error [mc:mp3voice:pre]: syntax error in expression "0+408Â (1,652.20Â mb)"
 #   The borg script has this " " in the SLOTS files, no... it's not a chr 32 (space),
 #   it's a chr 160... damn it, I almost pulled my hair out figuring that one out.
 #
@@ -237,8 +241,8 @@ set mp3autov(0x005) "=none="
 set mp3autov(0x006) "11, 8"
 
 ### Do not edit below ###
-set mp3autov(version) v1.9
-set mp3autov(svs:script) "mp3voice 001009000000"
+set mp3autov(version) v1.9.1
+set mp3autov(svs:script) "mp3voice 001009001000"
 set mp3autov(svs:server) "mc.purehype.net 8085"
 
 
@@ -341,15 +345,11 @@ putloglev 2 * "......"
  }
 # if {($mp3autov(topic)) && (([string match "* $chan *" $mp3autov(topic_chans)]) ||
 #     ($mp3autov(topic_chans) == ""))} {}
- if {![info exists mp3autov(users:$chan)]} {
-  set mp3autov(users:$chan) "$nick"
-  mc:mp3:inter:+server $nick $chan
- } {
+ if {![info exists mp3autov(users:$chan)]} { set mp3autov(users:$chan) "$nick" } {
   if {![string match "* [mp3autov:filt $nick] *" " $mp3autov(users:$chan) "]} {
    set mp3autov(users:$chan) "$mp3autov(users:$chan) $nick"
-   mc:mp3:inter:+server $nick $chan
   }
- };return 0
+ };mc:mp3:inter:+server $nick $chan;return 0
 }
 
 proc mp3autov:chk_topic {} {
@@ -576,7 +576,9 @@ proc mc:mp3:inter:+server {nick chan} {
  global mp3autov mc_mp3voice ; set chan [string tolower $chan]
  if {[string match "*mc:mp3:inter:-server $nick $chan*" [timers]]} {
   foreach timer [timers] {
-   if {[string match "*mc:mp3:inter:-server [mp3autov:filt $nick] $chan*" $timer]} {killtimer [lindex $timer 2]}
+   if {[string match "*mc:mp3:inter:-server [mp3autov:filt $nick] $chan*" $timer]} {
+    killtimer [lindex $timer 2]
+   }
   }
  } ; timer $mp3autov(servexr) "mc:mp3:inter:-server [split $nick] $chan"
 }
@@ -618,7 +620,7 @@ proc mc:mp3voice:pre {from keyword args} {
  set uhost [string range $from [expr [string first ! $from]+1] e]
  set chan [lindex [split $args] 0]
  set hand [nick2hand $nick $chan]
- set args [join [split [string trimright [lrange [split $args] 2 e] ""] " "]]
+ set args [join [split [string trimright [lrange [split $args] 2 e] ""] "Â "]]
  mc:mp3voice "$nick" $uhost $hand $chan SLOTS $args
  return 0
 }
