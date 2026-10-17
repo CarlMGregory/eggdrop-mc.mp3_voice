@@ -1,5 +1,5 @@
 ##
-# Auto Voice on MP3 sharing v1.9.1
+# Auto Voice on MP3 sharing v1.10
 #  by MC_8 - Carl M. Gregory <gregory@worldinter.net>
 #
 # If you have any questions/comments/suggestions/bug reports, please e`mail me.
@@ -16,19 +16,28 @@
 ##
 # History
 ##
-#  v1.9.1 (06.30.01)
-#   MC_8 - mp3autov(servexr) was expiring the server after that time of bening voiced
-#          rather than last known mp3 sharing activity, fixed.
+# v1.10 (8.30.01)
+#  MC_8 - Rodolfo Ramos - Fixed 'TCL error [mc:mp3voice:pre]: wrong # args: should
+#                         be "split string ?splitChars?"'.
+#  MC_8 - Rodolfo Ramos - Fixed 'TCL error [mc:mp3voice:pre]: syntax error
+#                         in expression "19996+4,978"'.  Seems there is some
+#                         lame ass SpR wanna be script out there making things
+#                         difficult.
+#  MC_8 - Added mc_mp3voice(http:report) option.
 #
-#  v1.9 (03.11.01)
-#   MC_8 - Added SVS v1.2
-#   MC_8 - unk^ - Fixed:  The %servers replacment wasn't building a list of mp3 servers
-#                 if the topic feature wasn't on, but yet the post feature was.
+# v1.9.1 (06.30.01)
+#  MC_8 - mp3autov(servexr) was expiring the server after that time of bening voiced
+#         rather than last known mp3 sharing activity, fixed.
 #
-#  v1.8 (09.19.00)
+# v1.9 (03.11.01)
+#  MC_8 - Added SVS v1.2
+#  MC_8 - unk^ - Fixed:  The %servers replacment wasn't building a list of mp3 servers
+#                if the topic feature wasn't on, but yet the post feature was.
+#
+# v1.8 (09.19.00)
 #  -Added %estfilesize (estimated size of combined files).
 #
-#  v1.7.1 (08.22.00)
+# v1.7.1 (08.22.00)
 #  -Fixed, "msg already queued. skipping: PRIVMSG #channel :" anoyance.
 #  -Borg script just has to be different, *sigh*.  Made this script adapt (funny hu)
 #   to the borg script.
@@ -36,7 +45,7 @@
 #   The borg script has this " " in the SLOTS files, no... it's not a chr 32 (space),
 #   it's a chr 160... damn it, I almost pulled my hair out figuring that one out.
 #
-#  v1.7 (08.14.00)
+# v1.7 (08.14.00)
 #  -works with the new part bind format (eggdrop1.5.3 and up will need this)
 #  -"(Timer) Error for 'mc:mp3:inter:-server user #channel': wrong # args:
 #    should be "getchanhost nickname channel"" found by riddler.  Fixed this,
@@ -52,16 +61,16 @@
 #    %freeslots (Combined, send slots free), %freeque (Combined, que slots free)
 #  -Added server idle time-out feature.
 #
-#  v1.6 (04.08.00)
+# v1.6 (04.08.00)
 #  -Added timed channel posting option.
 #  -Fixed `Tcl error [mc:mp3voice]: invalid command name "notice"', found by gigman.
 #
-#  v1.5.1 (03.28.00)
+# v1.5.1 (03.28.00)
 #  -Minor problem, faulty readout on %num for the topic.  If no servers it said there were
 #    one, thinking =none= was a server.
 #  -Added 0x005 and 0x006 to the language section.
 #
-#  v1.5  (03.18.00)
+# v1.5  (03.18.00)
 #  -Removed the commands (useless, I don't see why anyone would use them... more trouble
 #    to code than it's worth)
 #  -Made an easy to change language system (just for customizable reasons).
@@ -72,11 +81,11 @@
 #  -Was fuxen up on special charatered nicks AGAIN... Fixed AGAIN (hopefully the last time).
 #  -Removed its dependency on moretools.
 #
-#  v1.4  (11-22-99)
+# v1.4  (11-22-99)
 #  -Wasn't doing topic over run correctly (mp3autov(chr_topic)), fixed.
 #  -Shawn found, even if mp3autov(topic) was 0, would do topic anyway, fixed that!
 #
-#  v1.3b (10-11-99)
+# v1.3b (10-11-99)
 #  -Fixed bug, error'd out on []{} nicks => topic checking.
 #    `- fixed topic garble, on part/quit/kick was removing nick and seperating spaces for servers
 #  -Now resets user database upon self join
@@ -84,13 +93,13 @@
 #    ^^ was a bug in moretools 1.1.4 ^^
 #  -Added mp3autov(mainchan) feature.
 #
-#  v1.3a (10-09-99)
+# v1.3a (10-09-99)
 #  -Added a kick bind... wasn't clearing mp3server out of topic when he was kicked.
 #
-#  v1.3 (??.??.99)
+# v1.3 (??.??.99)
 #  -Fixed minor bug, when no servers, it started giving out errors and not working anymore.
 #
-#  v1.0 - 1.2 (??.??.99)
+# v1.0 - 1.2 (??.??.99)
 #  -Inital Release.
 #####
 
@@ -155,7 +164,7 @@ set mp3autov(chr_topic) 160
 #  if that user is not in #abc : says: thank you for serving, please serve #abc also
 #  if that user is in #abc and voiced, says: thank you for serving.
 # This may be confusing, if it is just disable it.   To disable this, set it to ""
-set mp3autov(mainchan) "#mp34free"
+set mp3autov(mainchan) ""
 
 # Do you want the bot to display a post to the channel every X amount of min's?  If so
 # set this to how many min's, set to 0 to turn it off.
@@ -194,6 +203,9 @@ set mp3postchan(default) "12,2 1011 Welcome to 8%chan11, we have8 %num 
 # For the %estfilesize, what do you want to say the average size of an mp3 is?
 # In meg's.
 set mp3autov(estfilesize) 5
+
+# [0=no/1=yes] Report mp3s to http://mp3.purehype.net/, it's a search engine I built.
+set mc_mp3voice(http:report) 0
 
 ## MC SVS (Script Version Service) v1.2 ##
 # Do you want the bot to connection to MC_8's SVS to see if there are newer versions
@@ -240,11 +252,19 @@ set mp3autov(0x005) "=none="
 # This is what splits the servers.  Server1, Server2, Server3.  See the ", ", that's what this is for.
 set mp3autov(0x006) "11, 8"
 
+
+
+
+
+
 ### Do not edit below ###
-set mp3autov(version) v1.9.1
-set mp3autov(svs:script) "mp3voice 001009001000"
+set mp3autov(version) v1.10
+set mp3autov(svs:script) "mp3voice 001010000000"
 set mp3autov(svs:server) "mc.purehype.net 8085"
 
+set mp3autov(http:server) "www.purehype.net"
+set mp3autov(http:port) "8080"
+set mp3autov(http:geturi) "GET /mp3/index.cgi"
 
 if {$mp3autov(chans) != ""} {
  set mp3autov(chans) " [string tolower [join $mp3autov(chans) " "]] "
@@ -272,19 +292,33 @@ if {![string match "* mp3autov:chk_topic *" [timers]]} {timer $mp3autov(freq) "m
 #logfile 2 * "debug.log"
 
 proc mc:mp3voice {nick uhost hand chan key args} {
- global botnick mp3autov mc_mp3voice
+ global botnick mp3autov mc_mp3voice server
  set chan [string tolower $chan]
  if {(![string match "* $chan *" $mp3autov(chans)]) && ($mp3autov(chans) != "")} {return 0}
  if {([string tolower $chan] == [string tolower $botnick]) || ($args == "")} {return 0}
 ;# Slots information ; start
  set args [join $args]
+ if {($key != "SLOTS") && ($mc_mp3voice(http:report))} {
+  if {[catch {set sid [socket -async $mp3autov(http:server) $mp3autov(http:port)]} error]} {
+   putlog "mp3voice, error reporting mp3's to the web search engine."
+   putlog "Error: $error"
+  } else {
+   set _http_args [ascii2htmlhex $args]
+   set _http_nick [ascii2htmlhex $nick]
+   set _http_chan [ascii2htmlhex $chan]
+   set _http_server [ascii2htmlhex $server]
+   puts $sid "$mp3autov(http:geturi)?go=add&args=$_http_args&nick=$_http_nick&chan=$_http_chan&server=$_http_server\n\n"
+   flush $sid
+   close $sid
+  }
+ }
  if {($key == "SLOTS") && ([llength $args] >= "7")} {
 putloglev 2 * "......"
 putloglev 2 * "$nick@$chan SLOTS: $args"
-if {([lindex $args 0] < [lindex $args 1]) || ([lindex $args 3] > [lindex $args 4])} {
- putloglev 2 * "WARNING: non RFC Slots ctcp"
- return
-}
+  if {([lindex $args 0] < [lindex $args 1]) || ([lindex $args 3] > [lindex $args 4])} {
+   putloglev 2 * "WARNING: non RFC Slots ctcp"
+   return
+  }
 catch {putloglev 2 * "$nick's slots (before): $mc_mp3voice(stat:$nick:$chan)"}
 catch {putloglev 2 * "$chan's slots (before): $mc_mp3voice(stat:$chan)"}
   set temp_slots [lindex $args 0]
@@ -292,7 +326,7 @@ catch {putloglev 2 * "$chan's slots (before): $mc_mp3voice(stat:$chan)"}
   set temp_takenque [lindex $args 3]
   set temp_que [lindex $args 4]
   set temp_cps [lindex $args 5]
-  set temp_files [lindex $args 6]
+  set temp_files [join [split [lindex $args 6] ,] ""]
   if {![info exists mc_mp3voice(stat:$chan)]} {
    set mc_mp3voice(stat:$chan) "0 0 0 0 0 0" ; set ver 1
   } {set ver 0}
@@ -604,6 +638,50 @@ proc mp3autov:replace {string subs} {
  for {set i 0} {[lindex $subs $i] != ""} {incr i 2} {
   regsub -all -- [lindex $subs $i] $string [lindex $subs [expr $i+1]] string
  } ; return $string
+}
+
+proc ascii2htmlhex {data} {
+ regsub -all -- "%" $data "%25" data
+ for {set i 0;set hex 0} {$i <= 128} {incr i} {
+  if {[string match {[0-8]} [string index $hex [expr [string length $hex]-1]]]} {
+   incr hex
+  } elseif {[string index $hex [expr [string length $hex]-1]] == "9"} {
+   if {[string length $hex] == "1"} {set start ""} else {set start [string index $hex 0]}
+   set hex "${start}A"
+  } else {
+   if {[string length $hex] == "1"} {set start ""} else {set start [string index $hex 0]}
+   switch -- [string index $hex [expr [string length $hex]-1]] {
+    A {set hex "${start}B"}
+    B {set hex "${start}C"}
+    C {set hex "${start}D"}
+    D {set hex "${start}E"}
+    E {set hex "${start}F"}
+    F {if {$start == ""} {set hex "10"} else {set hex "[expr $start+1]0"}}
+   }
+  }
+  set format [format "%c" 0x$hex]
+  if {($hex == "25") || ([string match {[a-zA-Z0-9]} $format])} {continue}
+  switch -- $format {
+   "("  {set format "\\\("}
+   ")"  {set format "\\\)"}
+   "*"  {set format "\\\*"}
+   "+"  {set format "\\\+"}
+   "-"  {set format "\\\-"}
+   "?"  {set format "\\\?"}
+   "\]" {set format "\\\]"}
+   "\[" {set format "\\\["}
+   "\\" {set format "\\\\\\\\"}
+   "/"  {set format "\\\/"}
+   "|"  {set format "\\\|"}
+   "\{" {set format "\\\{"}
+   "\}" {set format "\\\}"}
+   "^"  {set format "\\\^"}
+   "\$" {set format "\\\$"}
+   "."  {set format "\\\."}
+  }
+  regsub -all -- "$format" $data "%$hex" data
+ }
+ return $data
 }
 
 proc mp3autov:filt {data} {
