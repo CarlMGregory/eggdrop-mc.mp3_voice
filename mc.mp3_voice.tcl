@@ -1,5 +1,5 @@
 ##
-# MP3 Voice v3.0
+# MP3 Voice v3.0.1
 #  by MC_8 - Carl M. Gregory <mc8@purehype.net>
 #  This script will only run on eggdrop 1.6.14 or greater.
 #
@@ -208,9 +208,9 @@ foreach {temp(name) temp(value)} [array get mc_mp3 :config:*] {
 set mc_mp3(info:loc) [info script]
 array set mc_mp3 [list \
   script                 "MP3 Voice" \
-  version                "v3.0" \
+  version                "v3.0.1" \
   svs:script             "mp3voice" \
-  svs:version            "003000000000" \
+  svs:version            "003000001000" \
   svs:client_version     "v4.0.2" \
   svs:client_svs_version "004000002000" \
   svs:server             "mc.svs.purehype.net" \
@@ -553,8 +553,8 @@ proc mc:mp3:nick_ {nick uhost handle channel newnick} {
   
   if {[info exists mc_mp3($array)]} {
     set new_array [list list $l_channel $newnick]
-    set mc_mp3($new_array) $mc_pc($array)
-    unset mc_pc($array)
+    set mc_mp3($new_array) $mc_mp3($array)
+    unset mc_mp3($array)
     
     if {$mc_mp3(:config:expire_server)} {
       set temp(command) [list mc:mp3:del_server $nick $l_channel]
@@ -1139,7 +1139,12 @@ putloglev o * "$mc_mp3(script) $mc_mp3(version) by MC_8 loaded."
 ##
 # History ( <Fixed by> - [Found by] - <Info> )
 ##
-# 3.0 (07.21.03)
+# v3.0.1 (07.21.03)
+#  MC_8 - - Fixed `can't read "mc_pc(list <channel> <nick>)": no such variable`,
+#           called from a nick change.
+#           Bugzilla Bug 313
+#
+# v3.0 (07.21.03)
 #  MC_8 - ^Spike^ - Added +/-mp3server public command.
 #                   Bugzilla Bug 179
 #  MC_8 -         - Upgraded SVS client.  v2.2 -> v4.0.2
