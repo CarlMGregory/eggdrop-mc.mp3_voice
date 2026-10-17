@@ -1,5 +1,5 @@
 ##
-# Auto Voice on MP3 sharing v1.10
+# Auto Voice on MP3 sharing v1.10.1
 #  by MC_8 - Carl M. Gregory <gregory@worldinter.net>
 #
 # If you have any questions/comments/suggestions/bug reports, please e`mail me.
@@ -16,6 +16,9 @@
 ##
 # History
 ##
+# v1.10.1 (10.29.01)
+#  MC_8 - Fixed 'Tcl error [mc:mp3voice]: error flushing "sockXX": broken pipe'.
+#
 # v1.10 (8.30.01)
 #  MC_8 - Rodolfo Ramos - Fixed 'TCL error [mc:mp3voice:pre]: wrong # args: should
 #                         be "split string ?splitChars?"'.
@@ -204,7 +207,11 @@ set mp3postchan(default) "12,2 1011 Welcome to 8%chan11, we have8 %num 
 # In meg's.
 set mp3autov(estfilesize) 5
 
-# [0=no/1=yes] Report mp3s to http://mp3.purehype.net/, it's a search engine I built.
+# [0=no/1=yes] Report mp3s to web based mp3 search engine?
+# I used to have one of these servers online, but I took it offline because
+# I don't have the bandwidth to keep it going.  I doubt anyone else has
+# a web based mp3 serch engine that is compatable with this... so leave
+# this set to 0 unless you know of one.
 set mc_mp3voice(http:report) 0
 
 ## MC SVS (Script Version Service) v1.2 ##
@@ -258,8 +265,8 @@ set mp3autov(0x006) "11, 8"
 
 
 ### Do not edit below ###
-set mp3autov(version) v1.10
-set mp3autov(svs:script) "mp3voice 001010000000"
+set mp3autov(version) v1.10.1
+set mp3autov(svs:script) "mp3voice 001010001000"
 set mp3autov(svs:server) "mc.purehype.net 8085"
 
 set mp3autov(http:server) "www.purehype.net"
@@ -303,6 +310,7 @@ proc mc:mp3voice {nick uhost hand chan key args} {
    putlog "mp3voice, error reporting mp3's to the web search engine."
    putlog "Error: $error"
   } else {
+   fconfigure $sid -blocking 0
    set _http_args [ascii2htmlhex $args]
    set _http_nick [ascii2htmlhex $nick]
    set _http_chan [ascii2htmlhex $chan]
